@@ -43,7 +43,7 @@ export default {
         }
     },
 
-    name: "CreatePeople"
+    name: "CreateComponent"
 }
 </script>
 
