@@ -36,9 +36,10 @@ export default {
                 age: this.age,
                 job: this.job
             }).then(response => {
-                this.name = null;
-                this.age = null;
-                this.job = null;
+                this.name = null
+                this.age = null
+                this.job = null
+                this.$parent.$refs.index.getPeople()
             })
         }
     },

@@ -1,12 +1,16 @@
 <template>
-    <test></test>
+    <div>
+        <router-link class="p-lg-2" to="/">People</router-link>
+        <router-link to="/people/create">Create people</router-link>
+
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
-import Test from "./components/Test.vue";
+
 export default {
-    name: "App",
-    components: {Test}
+    name: "App"
 }
 </script>
 
