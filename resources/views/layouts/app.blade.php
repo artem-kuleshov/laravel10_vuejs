@@ -17,16 +17,6 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div id="app" class="p-5">
-
-        <test></test>
-    </div>
+    <div id="app" class="p-5"></div>
 </body>
 </html>
-<script>
-    import ExampleComponent from "../../js/components/ExampleComponent.vue";
-    import Test from "../../js/components/Test.vue";
-    export default {
-        components: {Test, ExampleComponent}
-    }
-</script>
