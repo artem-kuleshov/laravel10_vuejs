@@ -13,8 +13,20 @@
             </thead>
             <tbody>
             <template v-for="person in people">
-                <ShowComponent :person="person"></ShowComponent>
-                <EditComponent :person="person" :ref="`edit_${person.id}`"></EditComponent>
+                <tr>
+                    <td>
+                        <router-link :to="{ name: 'people.show', params: {id: person.id} }">{{ person.id }}</router-link>
+                    </td>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.age }}</td>
+                    <td>{{ person.job }}</td>
+                    <td>
+                        <router-link :to="{ name: 'people.edit', params: {id: person.id} }">Edit</router-link>
+                    </td>
+                    <td>
+                        <a href="#" @click.prevent="deletePerson(person.id)" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
             </template>
             </tbody>
         </table>
@@ -23,11 +35,11 @@
 
 <script>
 
-import EditComponent from "./EditComponent.vue";
-import ShowComponent from "./ShowComponent.vue";
+import ShowComponent from "./Show.vue";
+
 export default {
-    name: "IndexComponent",
-    components: {ShowComponent, EditComponent},
+    name: "Index",
+    components: {ShowComponent},
     data() {
         return {
             people: null,
@@ -48,32 +60,8 @@ export default {
         getPeople() {
             axios.get('/api/people')
                 .then(response => {
-                    this.people = response.data
+                    this.people = response.data.data
                 })
-        },
-
-        changePersonId(id, name, age, job) {
-            this.editPersonId = id
-
-            let editComponent = this.$refs[`edit_${id}`][0];
-            editComponent.name = name
-            editComponent.age = age
-            editComponent.job = job
-        },
-
-        isEdit(id) {
-            return this.editPersonId === id
-        },
-
-        updatePerson(id) {
-            this.editPersonId = null
-            axios.patch(`/api/people/${id}`, {
-                name: this.name,
-                age: this.age,
-                job: this.job
-            }).then(response => {
-                this.getPeople()
-            })
         },
 
         deletePerson(id) {
