@@ -1,3 +1,15 @@
+<script setup>
+import {usePersonStore} from "../../stores/PersonStore";
+import {computed, ref} from "vue";
+
+const personStore = usePersonStore()
+
+const name = ref(null)
+const age = ref(null)
+const job = ref(null)
+const isEnabled = computed(() => name.value && age.value && job.value)
+</script>
+
 <template>
     <div>
         <div class="form-group">
@@ -13,43 +25,11 @@
             <input type="text" class="form-control" id="job" v-model="job">
         </div>
         <div class="form-group">
-            <button :disabled="!isEnabled" @click.prevent="addPerson" type="submit" class="btn btn-primary">Добавить</button>
+            <button :disabled="!isEnabled" @click.prevent="personStore.addPerson(name, age, job)" type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-
-    name: "Create",
-
-    data() {
-        return {
-            name: null,
-            age: null,
-            job: null
-        }
-    },
-
-    computed: {
-        isEnabled() {
-            return this.name && this.age && this.job
-        }
-    },
-
-    methods: {
-        addPerson() {
-            axios.post('/api/people', {
-                name: this.name,
-                age: this.age,
-                job: this.job
-            }).then(response => {
-                this.$router.push({ name: 'people.index'})
-            })
-        }
-    },
-}
-</script>
 
 <style scoped>
 

@@ -1,6 +1,15 @@
+<script setup>
+import {storeToRefs} from "pinia";
+import {usePersonStore} from "../../stores/PersonStore";
+const { people } = storeToRefs(usePersonStore())
+const personStore = usePersonStore()
+
+personStore.getPeople()
+</script>
+
 <template>
     <div>
-        <table class="table">
+        <table class="table" v-if="people">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -24,7 +33,7 @@
                         <router-link :to="{ name: 'people.edit', params: {id: person.id} }">Edit</router-link>
                     </td>
                     <td>
-                        <a href="#" @click.prevent="deletePerson(person.id)" class="btn btn-danger">Delete</a>
+                        <a href="#" @click.prevent="personStore.deletePerson(person.id)" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             </template>
@@ -32,46 +41,6 @@
         </table>
     </div>
 </template>
-
-<script>
-
-import ShowComponent from "./Show.vue";
-
-export default {
-    name: "Index",
-    components: {ShowComponent},
-    data() {
-        return {
-            people: null,
-            editPersonId: null,
-            name: null,
-            age: null,
-            job: null
-        }
-    },
-
-    props: ['obj'],
-
-    mounted() {
-        this.getPeople()
-    },
-
-    methods: {
-        getPeople() {
-            axios.get('/api/people')
-                .then(response => {
-                    this.people = response.data.data
-                })
-        },
-
-        deletePerson(id) {
-            axios.delete(`/api/people/${id}`).then(response => {
-                this.getPeople()
-            })
-        }
-    },
-}
-</script>
 
 <style scoped>
 

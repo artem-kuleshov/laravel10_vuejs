@@ -1,3 +1,28 @@
+<script setup>
+import {usePersonStore} from "../../stores/PersonStore";
+import {computed, ref} from "vue";
+import {useRoute} from "vue-router";
+import {storeToRefs} from "pinia";
+
+const route = useRoute()
+const personStore = usePersonStore()
+
+const { person } = storeToRefs(personStore)
+
+let name = ref(null)
+let age = ref(null)
+let job = ref(null)
+
+personStore.getPerson(route.params.id)
+    .then(res => {
+        name.value = person.value.name
+        age.value = person.value.age
+        job.value = person.value.job
+    })
+
+const isEnabled = computed(() => name.value && age.value && job.value)
+</script>
+
 <template>
     <div>
         <div class="form-group">
@@ -13,55 +38,10 @@
             <input type="text" class="form-control" id="job" v-model="job">
         </div>
         <div class="form-group">
-            <button :disabled="!isEnabled" @click.prevent="update" type="submit" class="btn btn-primary">Update</button>
+            <button :disabled="!isEnabled" @click.prevent="personStore.updatePerson(route.params.id, name, age, job)" type="submit" class="btn btn-primary">Update</button>
         </div>
     </div>
 </template>
-
-<script>
-export default {
-    name: "EditComponent",
-
-    data() {
-        return {
-            name: null,
-            age: null,
-            job: null
-        }
-    },
-
-    computed: {
-        isEnabled() {
-            return this.name && this.age && this.job
-        }
-    },
-
-    mounted() {
-        this.getPerson()
-    },
-
-    methods: {
-        getPerson() {
-            axios.get(`/api/people/${this.$route.params.id}`)
-            .then(res => {
-                this.name = res.data.data.name
-                this.age = res.data.data.age
-                this.job = res.data.data.job
-            })
-        },
-
-        update() {
-            axios.patch(`/api/people/${this.$route.params.id}`, {
-                name: this.name,
-                age: this.age,
-                job: this.job
-            }).then(response => {
-                this.$router.push({name: 'people.show', params: {id: this.$route.params.id}})
-            })
-        },
-    },
-}
-</script>
 
 <style scoped>
 
